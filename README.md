@@ -3,6 +3,8 @@ End-to-end fraud detection system for transaction data using a Transformer model
 
 # Transaction Fraud Transformer Agent
 
+Licensed under the Apache License, Version 2.0.
+
 This project adds a deployable fraud-scoring agent around a compact Transformer
 architecture for tabular transaction data.
 
