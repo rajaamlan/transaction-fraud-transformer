@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+artifacts/model.pt
+artifacts/preprocessor.json
+artifacts/metrics.json

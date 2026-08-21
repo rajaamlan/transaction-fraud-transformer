@@ -1,0 +1,14 @@
+{
+  "name": "ft_transformer_improved",
+  "data_dir": "/kaggle/input/competitions/ieee-fraud-detection",
+  "artifact_dir": "/kaggle/working/artifacts",
+  "sample_rows": 150000,
+  "epochs": 8,
+  "batch_size": 512,
+  "d_model": 96,
+  "nhead": 4,
+  "num_layers": 3,
+  "dropout": 0.15,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.0001
+}

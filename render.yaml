@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: fraud-transformer-agent
+    env: docker
+    plan: starter
+    healthCheckPath: /health

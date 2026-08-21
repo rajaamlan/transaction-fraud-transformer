@@ -1,0 +1,14 @@
+{
+  "name": "ft_transformer_sanity",
+  "data_dir": "/kaggle/input/competitions/ieee-fraud-detection",
+  "artifact_dir": "/kaggle/working/artifacts",
+  "sample_rows": 50000,
+  "epochs": 3,
+  "batch_size": 512,
+  "d_model": 64,
+  "nhead": 4,
+  "num_layers": 2,
+  "dropout": 0.1,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.0001
+}

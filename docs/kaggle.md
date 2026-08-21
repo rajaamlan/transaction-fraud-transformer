@@ -1,0 +1,53 @@
+# Kaggle Workflow
+
+Use IEEE-CIS as a competition input. Kaggle may mount it here:
+
+```text
+/kaggle/input/competitions/ieee-fraud-detection
+```
+
+Confirm GPU:
+
+```python
+import torch
+print(torch.cuda.is_available())
+print(torch.cuda.get_device_name(0))
+```
+
+Run sanity training:
+
+```bash
+PYTHONPATH=src python -m fraud_model.train \
+  --ieee-cis-dir /kaggle/input/competitions/ieee-fraud-detection \
+  --label-column isFraud \
+  --artifact-dir /kaggle/working/artifacts \
+  --sample-rows 50000 \
+  --epochs 3 \
+  --batch-size 512 \
+  --device cuda
+```
+
+Run the next improved training:
+
+```bash
+PYTHONPATH=src python -m fraud_model.train \
+  --ieee-cis-dir /kaggle/input/competitions/ieee-fraud-detection \
+  --label-column isFraud \
+  --artifact-dir /kaggle/working/artifacts \
+  --sample-rows 150000 \
+  --epochs 8 \
+  --batch-size 512 \
+  --d-model 96 \
+  --nhead 4 \
+  --num-layers 3 \
+  --dropout 0.15 \
+  --device cuda
+```
+
+Download these artifacts after training:
+
+```text
+artifacts/model.pt
+artifacts/preprocessor.json
+artifacts/metrics.json
+```
