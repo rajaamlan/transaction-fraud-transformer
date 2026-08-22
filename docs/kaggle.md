@@ -55,3 +55,5 @@ artifacts/model.pt
 artifacts/preprocessor.json
 artifacts/metrics.json
 ```
+
+For a notebook-style step list, see [docs/kaggle_improved_run.md](docs/kaggle_improved_run.md).

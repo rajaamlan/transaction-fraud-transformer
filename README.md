@@ -22,6 +22,7 @@ Transformer.
 
 See [docs/pipeline.md](docs/pipeline.md), [docs/kaggle.md](docs/kaggle.md),
 and [docs/benchmarks.md](docs/benchmarks.md) for the working plan.
+The Kaggle notebook version is in [docs/kaggle_improved_run.md](docs/kaggle_improved_run.md).
 
 ## Expected Columns
 
