@@ -41,6 +41,10 @@ PYTHONPATH=src python -m fraud_model.train \
   --nhead 4 \
   --num-layers 3 \
   --dropout 0.15 \
+  --lr-factor 0.5 \
+  --lr-patience 1 \
+  --max-grad-norm 1.0 \
+  --early-stopping-patience 2 \
   --device cuda
 ```
 

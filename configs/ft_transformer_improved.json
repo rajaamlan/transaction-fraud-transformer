@@ -10,5 +10,9 @@
   "num_layers": 3,
   "dropout": 0.15,
   "learning_rate": 0.0003,
-  "weight_decay": 0.0001
+  "weight_decay": 0.0001,
+  "lr_factor": 0.5,
+  "lr_patience": 1,
+  "max_grad_norm": 1.0,
+  "early_stopping_patience": 2
 }

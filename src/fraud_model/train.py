@@ -56,6 +56,9 @@ def train(args: argparse.Namespace) -> dict[str, float]:
         dropout=args.dropout,
     ).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, mode="max", factor=args.lr_factor, patience=args.lr_patience
+    )
     positive_count = float(train_labels.sum())
     negative_count = float(len(train_labels) - positive_count)
     pos_weight = torch.tensor([negative_count / max(positive_count, 1.0)], device=device)
@@ -67,6 +70,7 @@ def train(args: argparse.Namespace) -> dict[str, float]:
     best_state = None
     best_epoch = 0
     best_probabilities = None
+    epochs_without_improvement = 0
     for epoch in range(args.epochs):
         model.train()
         losses = []
@@ -77,6 +81,7 @@ def train(args: argparse.Namespace) -> dict[str, float]:
             optimizer.zero_grad(set_to_none=True)
             loss = loss_fn(model(numeric, categorical), labels)
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
             optimizer.step()
             losses.append(float(loss.item()))
 
@@ -97,11 +102,17 @@ def train(args: argparse.Namespace) -> dict[str, float]:
             "average_precision": epoch_average_precision,
         }
         history.append(epoch_metrics)
+        scheduler.step(epoch_average_precision)
         if epoch_average_precision > best_average_precision:
             best_average_precision = epoch_average_precision
             best_state = copy.deepcopy(model.state_dict())
             best_epoch = epoch + 1
             best_probabilities = epoch_probabilities
+            epochs_without_improvement = 0
+        else:
+            epochs_without_improvement += 1
+            if epochs_without_improvement >= args.early_stopping_patience:
+                break
 
     if best_state is not None:
         model.load_state_dict(best_state)
@@ -160,6 +171,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--learning-rate", type=float, default=3e-4)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
+    parser.add_argument("--lr-factor", type=float, default=0.5)
+    parser.add_argument("--lr-patience", type=int, default=1)
+    parser.add_argument("--max-grad-norm", type=float, default=1.0)
+    parser.add_argument("--early-stopping-patience", type=int, default=2)
     parser.add_argument("--validation-size", type=float, default=0.2)
     parser.add_argument("--threshold", type=float, default=0.5)
     parser.add_argument("--d-model", type=int, default=64)
