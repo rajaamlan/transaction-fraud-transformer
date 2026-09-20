@@ -4,14 +4,14 @@
 
 - FT-Transformer trained on IEEE-CIS.
 - Saved as `artifacts/model.pt`.
-- Served by the FastAPI fraud agent.
+- The notebook checkpoint is used for Kaggle predictions. API artifact integration
+  is still required; the existing FastAPI scaffold has a different artifact contract.
 
 ## Benchmark Models
 
 - LightGBM: strong classic tabular baseline.
-- TabPFN: pretrained tabular foundation baseline.
-- TabFM: Google zero-shot tabular foundation model; check license before any
-  commercial use.
+- TabPFN: installed, but benchmark blocked on pretrained-model license/access.
+- TabFM: unimplemented research comparison, with no measured score.
 - TabICL: tabular in-context learning baseline.
 
 Benchmarks should report the same metrics:
@@ -24,3 +24,7 @@ rows
 features
 inference time
 ```
+
+Measured results and evaluation groups are in [kaggle_verified_run.md](kaggle_verified_run.md).
+The small matched benchmark cannot be ranked directly against the larger main run.
+F1 is not reported for this release because no operating threshold was selected.

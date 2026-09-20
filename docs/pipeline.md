@@ -1,40 +1,30 @@
 # Pipeline
 
-```text
-1. Kaggle data mount
-2. LightGBM benchmark
-3. FT-Transformer sanity run
-4. FT-Transformer improved run
-5. Save best artifacts
-6. Download artifacts locally
-7. Serve through FastAPI
-8. Push to GitHub
-9. Deploy Docker API
+```mermaid
+flowchart TD
+    A[IEEE-CIS input] --> B[Split raw rows]
+    B --> C[Train-only preprocessing]
+    C --> D[Train FT-Transformer]
+    B --> E[LightGBM and matched TabICL benchmarks]
+    D --> F[Verify saved checkpoint and preprocessing]
+    F --> G[Chunked test predictions]
+    G --> H[Validate submission.csv]
+    H --> I[Kaggle late submission and score]
+    E --> J[Collated results and GitHub package]
+    I --> J
+    J --> K[Future: chronological evaluation and API integration]
 ```
 
-The Transformer is the primary model. LightGBM, TabPFN, TabFM, and TabICL are
-benchmarks used to understand what the Transformer must beat.
+The Transformer is the submission model. LightGBM and TabICL benchmarks completed.
+TabPFN is blocked on model access; TabFM is not implemented.
 
 ## Current Scorecard
 
-```text
-LightGBM sanity, 50k rows:
-  ROC-AUC 0.8913
-  AUPRC   0.6082
+See the [verified report](kaggle_verified_run.md) and [README](../README.md).
+The main Transformer achieved ROC-AUC 0.853336 and average precision 0.417455.
 
-FT-Transformer sanity, 50k rows, 3 epochs:
-  ROC-AUC 0.8416
-  AUPRC   0.3636
-```
+## Resource Constraints
 
-## Next Training Target
-
-Run the improved Transformer config on Kaggle:
-
-```text
-150k rows
-8 epochs
-d_model 96
-3 Transformer layers
-best checkpoint selected by validation AUPRC
-```
+The earlier 150k-row configuration caused a T4 memory failure. The verified
+experiment uses 50k sampled rows, dimension 64, two layers, and batch size 64.
+Do not increase data or model size without measuring memory usage.

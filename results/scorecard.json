@@ -1,0 +1,46 @@
+{
+  "source": "https://www.kaggle.com/code/rajaamlan/notebook70df114be2",
+  "validation_run_date": "2026-09-11",
+  "primary_model": "ft_transformer_t4_safe",
+  "main_validation": {
+    "train_rows": 40000,
+    "validation_rows": 10000,
+    "features": 432,
+    "split": "stratified_random",
+    "seed": 42,
+    "models": [
+      {"model": "LightGBM", "roc_auc": 0.89127533609795, "average_precision": 0.6081766498946298},
+      {"model": "FT-Transformer", "roc_auc": 0.853336449859135, "average_precision": 0.41745453745344563, "best_epoch": 5}
+    ]
+  },
+  "small_matched_benchmark": {
+    "train_rows": 2000,
+    "validation_rows": 1000,
+    "features": 100,
+    "seed": 42,
+    "models": [
+      {"model": "LightGBM", "status": "completed", "roc_auc": 0.5752506915629322, "average_precision": 0.14427715557303264},
+      {"model": "TabICL", "status": "completed", "roc_auc": 0.82326244813278, "average_precision": 0.2540562323594146},
+      {"model": "TabPFN", "status": "model_access_required"},
+      {"model": "TabFM", "status": "not_implemented"}
+    ]
+  },
+  "kaggle_submission": {
+    "status": "complete_after_deadline",
+    "date": "2026-09-19",
+    "model": "FT-Transformer",
+    "metric": "roc_auc",
+    "public_score": 0.867624,
+    "private_score": 0.844891,
+    "test_rows": 506691,
+    "notebook_version": 2,
+    "script_version_id": 351207506,
+    "url": "https://www.kaggle.com/code/rajaamlan/notebook70df114be2?scriptVersionId=351207506",
+    "csv_sha256": "50de370f267b1e5888a758c974de33ddd3d6b1d7c1bf486996456e85fe43a4b7"
+  },
+  "limitations": [
+    "Evaluation groups differ in training rows, validation rows, and features; do not compare their scores directly.",
+    "Main validation was used for checkpoint selection and is not an untouched test set.",
+    "Single-seed random splits do not establish chronological deployment performance."
+  ]
+}

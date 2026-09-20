@@ -5,3 +5,7 @@ __pycache__/
 artifacts/model.pt
 artifacts/preprocessor.json
 artifacts/metrics.json
+artifacts/*.pkl
+artifacts/*.npz
+submission.csv
+submission_manifest.json
