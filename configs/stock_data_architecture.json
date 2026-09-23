@@ -1,0 +1,32 @@
+{
+  "database_path": "data/market_data.sqlite",
+  "raw_data_root": "data/raw",
+  "processed_data_root": "data/processed",
+  "starter_universe": [
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "AMZN",
+    "META",
+    "GOOGL",
+    "TSLA",
+    "SPY",
+    "QQQ"
+  ],
+  "default_horizon_days": 5,
+  "storage_policy": {
+    "git_tracks": [
+      "code",
+      "docs",
+      "configs",
+      "tiny sample data"
+    ],
+    "git_ignores": [
+      "SQLite databases",
+      "raw market data",
+      "processed feature exports",
+      "model artifacts"
+    ]
+  }
+}
+

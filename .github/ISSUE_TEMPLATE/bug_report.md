@@ -1,0 +1,29 @@
+---
+name: Bug report
+about: Report a reproducible problem
+title: "[Bug]: "
+labels: bug
+assignees: ""
+---
+
+## What happened?
+
+
+## How to reproduce
+
+1.
+2.
+3.
+
+## Expected behavior
+
+
+## Environment
+
+- OS:
+- Python version:
+- Command run:
+
+## Extra context
+
+

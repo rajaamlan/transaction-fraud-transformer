@@ -1,101 +1,110 @@
-# Transaction Fraud Transformer
+# Transaction Fraud Transformer + Stock Forecasting Lab
 
-A Transformer-first fraud detection project using IEEE-CIS transaction data,
-Kaggle GPUs, and matched tabular-model benchmarks. The main model is an
-FT-Transformer trained from scratch, not an LLM. TabICL is a pretrained comparison.
+[![CI](https://github.com/rajaamlan/transaction-fraud-transformer/actions/workflows/ci.yml/badge.svg)](https://github.com/rajaamlan/transaction-fraud-transformer/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
+[![Kaggle](https://img.shields.io/badge/Kaggle-submitted-20BEFF.svg)](https://www.kaggle.com/code/rajaamlan/notebook70df114be2)
 
-[Kaggle notebook](https://www.kaggle.com/code/rajaamlan/notebook70df114be2)
-| [Reproducible notebook](notebooks/building-transformers-v2.ipynb)
-| [Verified experiment report](docs/kaggle_verified_run.md)
-| [Submission guide](docs/submission.md)
+A hands-on machine-learning repo for serious tabular modeling: an accepted
+IEEE-CIS fraud-detection submission, reproducible transformer experiments,
+matched tabular benchmarks, and a new stock price-range forecasting lab.
 
-## Results
+The north star is practical ML engineering: leakage-safe preprocessing,
+measurable baselines, reproducible notebooks, tests, and API-ready scaffolding.
 
-### Kaggle late submission
+## Highlights
 
-**Accepted and scored:** FT-Transformer predictions for all 506,691 test transactions.
+- **Accepted Kaggle late submission:** FT-Transformer predictions for all
+  506,691 IEEE-CIS test transactions.
+- **Verified leaderboard scores:** public ROC-AUC `0.867624`, private ROC-AUC
+  `0.844891`.
+- **Transformer-first tabular experiment:** FT-Transformer trained from scratch,
+  with LightGBM and TabICL comparisons.
+- **Production-minded scaffolding:** reusable scripts, tests, Dockerfile,
+  FastAPI starter, and artifact validation.
+- **New research direction:** stock price-range forecasting with uncertainty,
+  backtesting, and eventual portfolio-assistant design.
 
-| Public ROC-AUC | Private ROC-AUC |
-| ---: | ---: |
-| **0.867624** | **0.844891** |
+## Project Tracks
 
-[Submitted notebook version 2](https://www.kaggle.com/code/rajaamlan/notebook70df114be2?scriptVersionId=351207506)
-was evaluated after the deadline; this is not a prize-eligible entry.
-The [machine-readable scorecard](results/scorecard.json) records scores and CSV hash.
+| Track | Status | What It Shows |
+| --- | --- | --- |
+| Fraud Transformer | Verified | End-to-end tabular transformer experiment on IEEE-CIS |
+| Kaggle Submission | Accepted late submission | Batched inference, CSV validation, reproducible artifacts |
+| Tabular Benchmarks | In progress | LightGBM, TabICL, and future foundation-model comparisons |
+| Stock Forecaster | Early lab | Leakage-safe financial features and baseline price ranges |
 
-### Main experiment
+## Results Snapshot
 
-50,000 sampled transactions: 40,000 training / 10,000 validation, 432 features,
-seed 42. Preprocessing is fitted on training rows only.
+### Kaggle Late Submission
 
-| Model | ROC-AUC | Average precision (AUPRC) |
+| Model | Public ROC-AUC | Private ROC-AUC | Rows Scored |
+| --- | ---: | ---: | ---: |
+| FT-Transformer | **0.867624** | **0.844891** | 506,691 |
+
+The submission was evaluated after the competition deadline, so it is not
+prize-eligible. The machine-readable scorecard is stored in
+[`results/scorecard.json`](results/scorecard.json).
+
+### Main Validation Experiment
+
+50,000 sampled transactions: 40,000 training rows, 10,000 validation rows,
+432 features, seed 42. Preprocessing is fit on training rows only.
+
+| Model | ROC-AUC | Average Precision |
 | --- | ---: | ---: |
-| LightGBM baseline | 0.891275 | 0.608177 |
-| **FT-Transformer (primary model)** | **0.853336** | **0.417455** |
+| LightGBM baseline | **0.891275** | **0.608177** |
+| FT-Transformer | 0.853336 | 0.417455 |
 
-The Transformer uses 64-dimensional tokens, four attention heads, two layers,
-five epochs, class-weighted loss, and batches of 64. Both training and validation
-are batched to fit a Tesla T4. Saved-checkpoint inference was verified against
-the original validation predictions.
+This is intentionally reported honestly: the tree model wins the main validation
+split, while the transformer path remains useful for learning architecture,
+GPU-safe batching, and artifact handling.
 
-### Small matched foundation-model benchmark
+## Stock Forecasting Lab
 
-2,000 training / 1,000 validation rows, the same 100 training-selected features.
-This is a separate experiment, **not directly comparable to the table above**.
+The stock track is a new build-from-scratch project for forecasting price ranges,
+not exact future prices. The first version creates tabular features from OHLCV
+data and fits a simple baseline range model before any XGBoost, LightGBM, or
+transformer work.
 
-| Model | ROC-AUC | Average precision (AUPRC) | Status |
-| --- | ---: | ---: | --- |
-| LightGBM matched | 0.575251 | 0.144277 | Completed |
-| TabICL | **0.823262** | **0.254056** | Completed |
-| TabPFN | - | - | Installed; model access requires license acceptance |
-| TabFM | - | - | Not implemented |
-
-TabICL wins this small comparison. Approximately 36 positive validation examples,
-a single split, and a single-member pretrained ensemble limit the conclusion.
-
-## Pipeline
-
-```mermaid
-flowchart LR
-    A[IEEE-CIS data] --> B[Raw train / validation split]
-    B --> C[Train-only preprocessing]
-    C --> D[FT-Transformer]
-    B --> E[LightGBM and matched TabICL benchmark]
-    D --> F[Checkpoint and preprocessing bundle]
-    F --> G[Batched test inference]
-    G --> H[Validated submission.csv]
-    H --> I[Kaggle late submission]
-    D --> J[Validation results]
-    E --> J
-```
-
-## Reproduce On Kaggle
-
-1. Import `notebooks/building-transformers-v2.ipynb` into Kaggle.
-2. Attach IEEE-CIS Fraud Detection; select a T4 GPU.
-3. Enable Internet for pretrained-model package and checkpoint downloads.
-4. Run training and artifact verification. Foundation comparisons are optional.
-5. Run the final submission section to create `submission.csv`,
-   `submission_manifest.json`, and `results.json`.
-6. Save a version **with outputs**, then submit `submission.csv` to IEEE-CIS.
-
-The final section can reuse the original notebook's saved version 1 output without
-retraining. See the [submission guide](docs/submission.md).
-The submission uses the development checkpoint trained on 40,000 rows, not a
-full-dataset retrain. Validation metrics are not Kaggle leaderboard scores.
-
-## Repository Layout
+Current stock files:
 
 | Path | Purpose |
 | --- | --- |
-| `notebooks/building-transformers-v2.ipynb` | Training, benchmarks, verification, submission |
-| `scripts/kaggle_submission.py` | Chunked inference and strict CSV validation |
-| `scripts/kaggle_finalize_cell.py` | Restore checkpoint, generate CSV, collate results |
-| `scripts/build_submission_notebook.py` | Synchronize final notebook cells with scripts |
-| `tests/test_kaggle_submission.py` | Alignment and preprocessing edge cases |
-| `src/fraud_model/` | Separate training CLI and FastAPI scoring scaffold |
+| [`docs/stock_forecaster_strategy.md`](docs/stock_forecaster_strategy.md) | Product and modeling strategy |
+| [`src/stock_forecaster/features.py`](src/stock_forecaster/features.py) | Leakage-safe OHLCV feature engineering |
+| [`src/stock_forecaster/baseline.py`](src/stock_forecaster/baseline.py) | Baseline expected price and range forecaster |
+| [`tests/test_stock_forecaster.py`](tests/test_stock_forecaster.py) | Unit tests for feature and baseline behavior |
 
-## Local Development
+Planned output:
+
+```text
+Ticker: AAPL
+Horizon: 5 trading days
+Expected close: 234.10
+Predicted range: 226.80 to 241.40
+Historical error: +/- 3.2%
+Signal: research-only, not financial advice
+```
+
+## Repository Layout
+
+```text
+.
++-- docs/                  # Experiment reports, roadmap, and strategy notes
++-- notebooks/             # Reproducible Kaggle notebook
++-- results/               # Machine-readable scorecards and run outputs
++-- scripts/               # Kaggle submission and notebook sync utilities
++-- src/
+|   +-- fraud_model/       # Fraud detection training/API scaffold
+|   +-- stock_forecaster/  # Stock price-range forecasting lab
++-- tests/                 # Unit tests and submission validation tests
++-- Dockerfile
++-- requirements.txt
++-- README.md
+```
+
+## Quickstart
 
 ```powershell
 python -m venv .venv
@@ -105,36 +114,56 @@ $env:PYTHONPATH = "src"
 pytest -q
 ```
 
-Submission validation tests do not need a GPU:
-
-```powershell
-python -m unittest discover -s tests -p test_kaggle_submission.py -v
-```
-
-## API Scaffold
-
-The API and Docker scaffold are included, but the Kaggle checkpoint and
-`preprocessing.pkl` are **not drop-in compatible** with the CLI's
-`model.pt` / `preprocessor.json` contract. Deployment integration remains work to do.
-To exercise the separate CLI/API path with sample data:
+If `pytest` is not installed yet, the stock-forecasting tests can also run with
+the standard library test runner:
 
 ```powershell
 $env:PYTHONPATH = "src"
-python -m fraud_model.train --data data/sample_transactions.csv --label-column is_fraud --artifact-dir artifacts
-uvicorn fraud_model.api:app --host 0.0.0.0 --port 8000
+python -m unittest tests.test_stock_forecaster -v
 ```
 
-## Limitations And Next Steps
+## Reproduce The Kaggle Submission
 
-- Add chronological validation and an untouched test period before deployment claims.
-- Class-weighted outputs need separate probability calibration and threshold validation.
-- Complete TabPFN after authorized model access; TabFM has no result.
-- Evaluate larger matched samples and several seeds before declaring a general winner.
-- Integrate the notebook artifact contract with the API before deploying this checkpoint.
+1. Import [`notebooks/building-transformers-v2.ipynb`](notebooks/building-transformers-v2.ipynb)
+   into Kaggle.
+2. Attach the IEEE-CIS Fraud Detection dataset.
+3. Select a T4 GPU.
+4. Run training, validation, artifact checks, and final inference.
+5. Submit the generated `submission.csv`.
 
-## Data And License
+More detail:
 
-Code: [Apache 2.0](LICENSE). IEEE-CIS data and pretrained weights retain their own
-terms. Raw competition data, credentials, and binary checkpoints are not committed.
+- [Verified experiment report](docs/kaggle_verified_run.md)
+- [Submission guide](docs/submission.md)
+- [Pipeline notes](docs/pipeline.md)
 
-Dataset: [IEEE-CIS Fraud Detection, Kaggle (2019)](https://www.kaggle.com/competitions/ieee-fraud-detection).
+## Roadmap
+
+Near-term work is tracked in [`docs/roadmap.md`](docs/roadmap.md). The main
+themes are:
+
+- add real stock data collection
+- create a Jupyter walkthrough notebook for the stock lab
+- add chronological validation for financial forecasting
+- compare baseline, Random Forest, XGBoost, and LightGBM
+- build a small dashboard once backtesting is honest
+
+## Contributing
+
+Contributions are welcome, especially around tests, leakage checks,
+documentation, benchmarking, and small reproducible experiments. See
+[`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## Important Notes
+
+- The fraud model is a learning and research project, not a deployed fraud
+  prevention system.
+- The stock forecaster is research-only and is not financial advice.
+- Raw competition data, credentials, model checkpoints, and large binary
+  artifacts are not committed.
+
+## License
+
+Code is released under the [Apache 2.0 License](LICENSE). Dataset terms,
+competition rules, pretrained weights, and third-party services retain their own
+licenses and restrictions.
